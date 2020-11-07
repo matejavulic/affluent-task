@@ -34,7 +34,6 @@ var remapToList = function(data) {
             atr.push(data[key].clickCount)
             atr.push(data[key].EPC)
             atr.push(data[key].impCount)
-            atr.push(data[key].CR)
             dateTable.push(atr)
             atr = []
         }
@@ -51,7 +50,7 @@ var saveDateTableDb = function(fetchedData) {
     return new Promise(function(resolve, reject) {
         dateTable = fetchedData
 
-        let query = `INSERT INTO report (date, total_commissions, net_sales, net_leads, click_count, epc, impressions, cr) VALUES ?`;
+        let query = `INSERT INTO report (date, total_commissions, net_sales, net_leads, click_count, epc, impressions) VALUES ?`;
         Mysqldb.query(query, [dateTable], (err, results, fields) => {
 
             if (err) {
@@ -200,7 +199,9 @@ router.get('/', function(req, res, next) {
                     res.render('date', {
                         isFetched: isFetched,
                         isSaved: isSaved,
-                        error: err
+                        status: status,
+                        code: err.code,
+                        message: err.sqlMessage
                     })
                 })
 

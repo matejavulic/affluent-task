@@ -32,7 +32,7 @@ function dateFromISO8601(isostr) {
 
 async function fetchUserAsync() {
 
-    let response = await fetch(`http://localhost:8080/user/get`);
+    let response = await fetch(`http://localhost:8080/user/get`)
     let data = await response.json()
     return data;
 
@@ -56,7 +56,7 @@ function injectDataUsers(data) {
 
         userRows = userRows +
             `
-        <td colspan = "8">
+        <td colspan = "6">
          <div class="center">
             <p> There is no data. Have you <a style="color: #dddd55;" href="http://localhost:8080/user">fetched it?</a></p>
          </div>
@@ -86,12 +86,11 @@ function injectDataUsers(data) {
 
 async function fetchDateAsync() {
 
-    let response = await fetch(`http://localhost:8080/date/get`);
+    let response = await fetch(`http://localhost:8080/date/get`)
     let data = await response.json()
     return data
 
 }
-
 
 function injectDataDates(data) {
 
@@ -114,7 +113,7 @@ function injectDataDates(data) {
 
         dateRows = dateRows +
             `
-        <td colspan = "8">
+        <td colspan = "9">
          <div class="center">
             <p> There is no data. Have you <a style="color: #dddd55;" href="http://localhost:8080/date">fetched it?</a></p>
          </div>
@@ -135,7 +134,7 @@ function injectDataDates(data) {
                     <td data-th="Clicks">` + data.data[i].click_count + `</td>
                     <td data-th="EPC">$` + data.data[i].epc + `</td>
                     <td data-th="Impressions">` + data.data[i].impressions + `</td>
-                    <td data-th="CR">` + data.data[i].cr + `%</td>
+                    <td data-th="CR">` + (Math.round(10000 * (data.data[i].net_sales / data.data[i].click_count)) / 100) + `%</td>
                 </tr>
                 `
         }
@@ -145,14 +144,72 @@ function injectDataDates(data) {
         .innerHTML = dateRows
 }
 
+function showFetchError(tableName) {
+    document.getElementById(tableName)
+        .innerHTML =
+        `
+<td colspan = "9">
+    <div class="center">
+      <img src='/images/fail.png' , alt='Failed to fetch'>
+      <p> Couldn't fetch data. Please try 
+      <a style="color: #dddd55;" onclick=tryAgainFetch()>again.</a>
+      </p>
+    </div>
+`
+}
+
 function fetchData() {
 
     fetchUserAsync().then(data => {
+
         injectDataUsers(data)
+
+    }).catch(err => {
+        console.log("Catch user")
+        if (document.readyState === "complete") {
+            showFetchError("loading-users")
+        } else
+            window.onload = function() {
+                showFetchError("loading-users")
+            }
     });
 
     fetchDateAsync().then(data => {
+
         injectDataDates(data)
+
+    }).catch(err => {
+        if (document.readyState === "complete") {
+            showFetchError("loading-dates")
+        } else
+            window.onload = function() {
+                showFetchError("loading-dates")
+            }
     });
+}
+
+function tryAgainFetch() {
+
+    document.getElementById("loading-users")
+        .innerHTML =
+        `
+        <td colspan = "6">
+            <div class="center">
+              <img src='/images/loader.svg' , alt='Retrying...'>
+              <p> Retrying... </p>
+            </div>
+        `
+
+    document.getElementById("loading-dates")
+        .innerHTML =
+        `
+        <td colspan = "9">
+            <div class="center">
+              <img src='/images/loader.svg' , alt='Retrying...'>
+              <p> Retrying... </p>
+            </div>
+        `
+
+    fetchData()
 
 }
