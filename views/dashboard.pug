@@ -1,0 +1,57 @@
+link(rel='stylesheet', href='/stylesheets/dashboard.css')
+script(src='/javascripts/fetch.js')
+
+body
+a(href='/') &larr; Go back
+<h1>Fetched user and dates tables</h1>
+<br>
+<h2>User table</h2>
+<h4>Source: Req|Res</h4>
+<div id="table-wrapper">
+   <div id="table-scroll">
+<table id="loading-users" class="rwd-table">
+   <tr>
+      <th>Avatar</th>
+      <th>Fetched ID</th>
+      <th>Email</th>
+      <th>Name</th>
+      <th>Surname</th>
+   </tr>
+   <tr>
+      <td colspan = "5">
+         <div class="center">
+            <img src='/images/loader.svg' , alt='Loading...'>
+            <p> Loading, please wait... </p>
+         </div>
+      </td>
+   </tr>
+</table>
+</div>
+</div>
+<br>
+<h2>Dates table</h2>
+<h4>Source: Affluent Analytics</h4>
+<div id="table-wrapper">
+   <div id="table-scroll">
+      <table id="loading-dates" class="rwd-table">
+         <tr>
+            <th>Date</th>
+            <th>Commissions - Total</th>
+            <th>Sales - Net</th>
+            <th>Leads - Net</th>
+            <th>Clicks</th>
+            <th>EPC</th>
+            <th>Impressions</th>
+            <th>CR</th>
+         </tr>
+         <tr>
+            <td colspan = "8">
+               <div class="center">
+                  <img src='/images/loader.svg' , alt='Loading...'>
+                  <p> Loading, please wait... </p>
+               </div>
+            </td>
+         </tr>
+      </table>
+   </div>
+</div>

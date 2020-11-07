@@ -1,5 +1,12 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Affluent task
+  h3 Please choose a script to execute: 
+  ol 
+    li.margin-1
+      a(href='/user') Fetch and store users to db from Reqres.in service
+    li.margin-1
+      a(href='/date') Fetch and store Dates table to db from Affluent service
+    li.margin-1
+      a(href='/dashboard') Fetch and show all data form db

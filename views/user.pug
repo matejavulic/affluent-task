@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  a(href='/') &larr; Go back
+  h1 User data fetch
+
+  if isFetched == true && isSaved == true
+    div.message
+      img.center-img.shrink-6-5.margin-2(src='/images/success.png' , alt='Success')
+      p.center-p User data fetched and stored to the database.
+  
+  else if isFetched == true && isSaved == false
+    div.message
+      img.center-img.margin-2(src='/images/fail.png' , alt='Fail')
+      p.center-p An error occured while storing data to the database.
+      p.center-p Details:
+      p.center-p Status: #{status}, Code: #{code}
+      p.center-p Message: #{message}
+
+  else if isFetched == false 
+   div.message
+    img.center-img.margin-2(src='/images/fail.png' , alt='Fail')
+    p.center-p An error occured while fetching user data. 
+    p.center-p Details:
+    p.center-p Status:#{status}, Code: #{code}, URL: #{url}

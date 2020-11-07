@@ -45,14 +45,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Django #
-#*.log
-#*.pot
-#*.pyc
-#__pycache__
-db.sqlite3
-#media
-
 # Backup files #
 *.bak
 
@@ -330,4 +322,4 @@ GitHub.sublime-settings
 .history
 
 # Ignore Custom Folders
-Материјали/
+
