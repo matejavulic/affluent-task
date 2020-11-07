@@ -1,23 +1,16 @@
-/*
- * License: The MIT License (MIT)
- * Author:E-bank IT team
- * Author email: @ebanka-it.com
- * Date: Fri Aug 23 2019
- * Description:
- * Although this is not model of account table
- * (because it is not a NoSQL db) this module is
- * nested under models folder to maintain models philosophy.
- * *
- */
 const mysql = require("mysql");
+
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+
 
 // MySQL access parameters object
 const connection = mysql.createConnection({
-    host: 'db4free.net',
-    port: 3306,
-    user: 'aff_test',
-    password: 'afftestafftest',
-    database: 'aff_task'
+    host: process.env.MYSQL_HOST,
+    port: process.env.MYSQL_PORT,
+    user: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DBNAME
 });
 
 /*

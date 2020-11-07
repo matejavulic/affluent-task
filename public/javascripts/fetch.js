@@ -45,10 +45,10 @@ function injectDataUsers(data) {
     <tr>
     <th>No.</td>
     <th>Avatar</td>
-    <th>Fetched ID</th>
-    <th>Email</th>
     <th>Name</th>
     <th>Surname</th>
+    <th>Email</th>
+    <th>Fetched ID</th>
     </tr>
     `
 

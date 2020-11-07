@@ -5,7 +5,11 @@ const Mysqldb = require('../models/mysqldb');
 
 var router = express.Router();
 
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+
 var crateFetchCookie = function(cookies) {
+
     if (cookies) {
         let fetchCookie = 'cookie:'
         for (let key in cookies) {
@@ -86,7 +90,6 @@ var fetchDateTable = function(fetchCookie) {
         'sec_fetch_site': ' -H "sec-fetch-site: same-origin" ^',
         'sec_fetch_mode': ' -H "sec-fetch-mode: cors" ^',
         'sec_fetch_dest': ' -H "sec-fetch-dest: empty" ^',
-        //'referer': ' -H "referer: https://develop.pub.afflu.net/list?type=dates^&startDate=2019-01-01^&endDate=2020-01-01" ^',
         'referer': ' -H "referer: https://develop.pub.afflu.net/list?type=dates" ^',
         'accept_language': ' -H "accept-language: sr-RS,sr;q=0.9,en-US;q=0.8,en;q=0.7" ^',
         'cookie': ' -H "' + fetchCookie + '" ^ ',
@@ -128,7 +131,7 @@ var fetchDateTable = function(fetchCookie) {
     return new Promise(function(resolve, reject) {
 
         exec(instruction, (error, stdout, stderr) => {
-            console.log(instruction)
+
             try {
                 let parse = String(stdout)
                 let result = JSON.parse(parse)
@@ -151,14 +154,17 @@ router.get('/', function(req, res, next) {
 
     (async() => {
 
-        const browser = await puppeteer.launch({ headless: false, devtools: false });
+        const browser = await puppeteer.launch({
+            headless: process.env.PUPP_HEADLESS,
+            devtools: process.env.PUPP_DEVTOOLS
+        });
 
         try {
             const page = await browser.newPage();
 
             await page.goto('https://develop.pub.afflu.net/login');
-            await page.type('[name = "username"]', 'developertest@affluent.io')
-            await page.type('[name = "password"]', 'SOpcR^37')
+            await page.type('[name = "username"]', process.env.AFF_USERNAME)
+            await page.type('[name = "password"]', process.env.AFF_PASSWORD)
             await page.click('[class="btn green uppercase"]')
 
             await page.waitForNavigation({ waitUntil: 'networkidle2' })
@@ -232,7 +238,7 @@ router.get('/get', function(req, res, next) {
     }).catch(err => {
 
         console.log("Get DB error", err)
-        res.json({ 'status': 'error', 'data': { err } })
+        res.json({ 'status': 'error', 'data': err })
 
     })
 })
