@@ -4,7 +4,8 @@
     "author": "Mateja Vulic",
     "private": true,
     "scripts": {
-        "start": "nodemon node ./bin/www"
+        "start": "nodemon node ./bin/www",
+        "test": "mocha"
     },
     "dependencies": {
         "axios": "^0.21.0",
@@ -20,5 +21,10 @@
         "nodemon": "^2.0.6",
         "pug": "^3.0.0",
         "puppeteer": "^5.4.1"
+    },
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "chai-http": "^4.3.0",
+        "mocha": "^8.2.1"
     }
 }

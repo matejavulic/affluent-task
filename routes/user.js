@@ -119,7 +119,7 @@ router.get('/', function(req, res, next) {
             isSaved = false
             status = 'error'
 
-            res.render('user', {
+            res.status(409).render('user', {
                 isFetched: isFetched,
                 isSaved: isSaved,
                 status: status,
@@ -129,7 +129,7 @@ router.get('/', function(req, res, next) {
         })
 
     }).catch(err => { //api error handler
-        res.render('user', {
+        res.status(500).render('user', {
             isFetched: isFetched,
             isSaved: isSaved,
             status: err.state,
@@ -148,7 +148,7 @@ router.get('/get', function(req, res, next) {
         res.json({ 'status': 'success', 'data': results })
 
     }).catch(err => { // db fetch error handler
-        res.json({ 'status': 'error', 'data': { err } })
+        res.status(500).json({ 'status': 'error', 'data': err })
 
     })
 })
