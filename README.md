@@ -14,7 +14,7 @@ This is the simple application to fetch, store and display data from a REST API 
     npm install
 ```
 ## Running
- To start the express server, run the following:
+ To start the Express server, run the following:
 
 ```bash 
     npm start
