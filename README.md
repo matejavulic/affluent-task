@@ -28,3 +28,10 @@ This is the simple application to fetch, store and display data from a REST API 
 ```
 
 Open [http://localhost:8080](http://localhost:8080) to take a look around.
+
+## Testing
+ To run tests, run the following:
+
+```bash 
+    npm test
+```
