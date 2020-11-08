@@ -63,10 +63,6 @@ Thumbs.db
 .idea/**/libraries
 *.iws /out/
 
-# Python #
-#*.py[cod]
-#*$py.class
-
 # Distribution / packaging
 .Python build/
 develop-eggs/
@@ -116,12 +112,12 @@ celerybeat-schedule.*
 
 # Environments
 .env
-#.venv
-#env/
-#venv/
-#ENV/
-#env.bak/
-#venv.bak/
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 include/
 Scripts/
 tcl/
@@ -203,12 +199,12 @@ testem.log
 Thumbs.db
 
 # Django #
-#*.log
-#*.pot
-#*.pyc
-#__pycache__
+*.log
+*.pot
+*.pyc
+__pycache__
 db.sqlite3
-#media
+media
 settings.py
 
 # Backup files #
@@ -230,8 +226,8 @@ settings.py
 *.iws /out/
 
 # Python #
-#*.py[cod]
-#*$py.class
+*.py[cod]
+*$py.class
 
 # Distribution / packaging
 .Python build/
@@ -311,8 +307,6 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
-# Ignore Custom Folders
-Материјали/
 # Visual Studio Code #
 .vscode/*
 !.vscode/settings.json

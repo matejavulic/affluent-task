@@ -1,6 +1,7 @@
 {
     "name": "affluent-task",
-    "version": "0.0.0",
+    "version": "1.0.0",
+    "author": "Mateja Vulic",
     "private": true,
     "scripts": {
         "start": "nodemon node ./bin/www"
@@ -16,11 +17,8 @@
         "http-errors": "~1.6.3",
         "morgan": "~1.9.1",
         "mysql": "^2.18.1",
-        "node-libcurl": "^2.2.0",
         "nodemon": "^2.0.6",
         "pug": "^3.0.0",
-        "puppeteer": "^5.4.1",
-        "request": "^2.88.2",
-        "zlib": "^1.0.5"
+        "puppeteer": "^5.4.1"
     }
 }
