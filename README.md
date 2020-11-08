@@ -13,6 +13,13 @@ This is the simple application to fetch, store and display data from a REST API 
 ```bash 
     npm install
 ```
+3. Make sure .env file is placed in the root folder:
+```bash 
+    /affluent-task
+    |
+    |.env <--
+```
+
 ## Running
  To start the Express server, run the following:
 
