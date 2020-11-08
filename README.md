@@ -4,16 +4,20 @@
 This is the simple application to fetch, store and display data from a REST API and the Affluent website.
 
 ## Installation
-Clone the repo and install the dependencies.
-
+1. Clone the repo:
+```bash
     git clone https://github.com/matejavulic/affluent-task.git
     cd affluent-task
-
+```
+2. Install the dependencies:
+```bash 
     npm install
-
+```
 ## Running
  To start the express server, run the following:
 
-        npm start
+```bash 
+    npm start
+```
 
-Open http://localhost:8080 to to take a look around.
+Open [http://localhost:8080](http://localhost:8080) to to take a look around.
