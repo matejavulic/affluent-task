@@ -1,3 +1,9 @@
+/*
+ * Script for making a connection to the MySQL database 
+ * Although this is not a NoSQL db this script is
+ * nested under models folder to maintain models philosophy.
+ * *
+ */
 const mysql = require("mysql");
 
 const path = require('path')
@@ -13,9 +19,10 @@ const connection = mysql.createConnection({
     database: process.env.MYSQL_DBNAME
 });
 
-/*
-Making a connection object with db.
+/**
+ * Making a connection object with db.
  */
+
 connection.connect(function(err) {
     if (err) {
         return console.error('error: ' + err.message);
