@@ -1,3 +1,6 @@
+/**
+ * Node.js script to fetch data from a website using puppeteer (develop.pub.afflu.net).
+ */
 var express = require('express');
 const puppeteer = require('puppeteer');
 const { exec } = require("child_process");
@@ -8,6 +11,7 @@ var router = express.Router();
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
+// function to extract and remap fetched cookies into curl cookie header
 var crateFetchCookie = function(cookies) {
 
     if (cookies) {
@@ -20,6 +24,10 @@ var crateFetchCookie = function(cookies) {
 
 }
 
+/**
+ * Function to remap [{},{},{}...] to [[],[],[]...],
+ * so it can be inserted as a multi INSERT
+ *  */
 var remapToList = function(data) {
 
     let dateTable = []
@@ -45,11 +53,14 @@ var remapToList = function(data) {
     }
 }
 
+/**
+ * Function to insert all fetched Affluent data (dates table) into database
+ * using multi INSERT sql query
+ */
 var saveDateTableDb = function(fetchedData) {
 
     return new Promise(function(resolve, reject) {
         dateTable = fetchedData
-
         let query = `INSERT INTO report (date, total_commissions, net_sales, net_leads, click_count, epc, impressions) VALUES ?`;
         Mysqldb.query(query, [dateTable], (err, results, fields) => {
 
@@ -61,10 +72,10 @@ var saveDateTableDb = function(fetchedData) {
     })
 }
 
+// function to retreive all date data from database in ascending order by date 
 var getDateTableDb = function() {
 
     return new Promise(function(resolve, reject) {
-
         let query = `SELECT * FROM report ORDER BY date`;
         Mysqldb.query(query, (err, results, fields) => {
 
@@ -76,6 +87,7 @@ var getDateTableDb = function() {
     })
 }
 
+// function to build and execute curl fetch call on Affluent's dates table
 var fetchDateTable = function(fetchCookie) {
 
     let header = {
@@ -94,6 +106,7 @@ var fetchDateTable = function(fetchCookie) {
         'cookie': ' -H "' + fetchCookie + '" ^ ',
     }
 
+    // parameters related to date range, resolution and currency in api fetch request
     let dateTable = {
         'startDate': '2019-04-30',
         'endDate': '2020-04-01',
@@ -128,9 +141,7 @@ var fetchDateTable = function(fetchCookie) {
         body.compressed
 
     return new Promise(function(resolve, reject) {
-
         exec(instruction, (error, stdout, stderr) => {
-
             try {
                 let parse = String(stdout)
                 let result = JSON.parse(parse)
@@ -144,6 +155,15 @@ var fetchDateTable = function(fetchCookie) {
     })
 }
 
+/**
+ * Function to handle incoming request for fetching Affluent dates table data,
+ * returns success or error object to date view (date.pug)
+ * workflow:
+ * 1. Start Puppeteer instance, log in, save the session cookies
+ * 2. Fetch dates table data
+ * 3. Store data to database
+ * 4. Close Puppeteer instance
+ * */
 router.get('/', function(req, res, next) {
 
     let cookies;
@@ -172,17 +192,13 @@ router.get('/', function(req, res, next) {
             let fetchCookie = crateFetchCookie(cookies)
 
             fetchDateTable(fetchCookie).then((fetchedTableData, err) => {
-
                 if (err)
                     throw err
-
                 isFetched = true;
 
                 saveDateTableDb(fetchedTableData).then((succes, error) => {
-
                     if (error)
                         throw error
-
                     isSaved = true
 
                     res.render('date', {
@@ -191,7 +207,7 @@ router.get('/', function(req, res, next) {
                         status: status,
                     })
 
-                }).catch(err => {
+                }).catch(err => { // db error handler
 
                     isSaved = false
                     status = 'error'
@@ -205,8 +221,7 @@ router.get('/', function(req, res, next) {
                     })
                 })
 
-            }).catch(err => {
-
+            }).catch(err => { // api fetch error handler
                 res.render('date', {
                     isFetched: isFetched,
                     isSaved: isSaved,
@@ -215,8 +230,7 @@ router.get('/', function(req, res, next) {
                 })
             })
 
-        } catch (error) {
-
+        } catch (error) { // puppeteer error handler
             res.render('date', {
                 puppetError: true,
                 status: error,
@@ -229,16 +243,15 @@ router.get('/', function(req, res, next) {
     })()
 })
 
-
+/** Function to handle incoming dates table get request,
+ *  returns dates data or error to dates view
+ *  */
 router.get('/get', function(req, res, next) {
 
     getDateTableDb().then((results, error) => {
-
         res.json({ 'status': 'success', 'data': results, 'rows': results.length })
 
-    }).catch(err => {
-
-        console.log("Get DB error", err)
+    }).catch(err => { // fetch data error handler
         res.json({ 'status': 'error', 'data': err })
 
     })

@@ -1,3 +1,6 @@
+/**
+ * Node.js script to handle show fetched data get request 
+ */
 var express = require('express');
 var router = express.Router();
 

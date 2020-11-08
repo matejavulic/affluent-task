@@ -1,6 +1,12 @@
+/** 
+ * JS script to make an async request to the 
+ * Express server to fetch all of the collected data. 
+ */
+
+// if the page is fully loaded, make two async fetch calls
 window.onload = fetchData();
 
-
+// function to convert database iso8601 date into readable format on front-end
 function dateFromISO8601(isostr) {
 
     var parts = isostr.match(/\d+/g);
@@ -30,6 +36,7 @@ function dateFromISO8601(isostr) {
 
 }
 
+// function to fetch user data from database
 async function fetchUserAsync() {
 
     let response = await fetch(`http://localhost:8080/user/get`)
@@ -38,6 +45,10 @@ async function fetchUserAsync() {
 
 }
 
+/**
+ * Function to dynamically render returned user data to the front-end.
+ * If there is no fetched data, renders appropriate user message. 
+ *  */
 function injectDataUsers(data) {
 
     let userRows =
@@ -53,7 +64,6 @@ function injectDataUsers(data) {
     `
 
     if (!Array.isArray(data.data) || !data.data.length) {
-
         userRows = userRows +
             `
         <td colspan = "6">
@@ -63,9 +73,7 @@ function injectDataUsers(data) {
         </td>
         `
     } else {
-
         for (let i = 0; i <= data.data.length - 1; i++) {
-
             userRows = userRows +
                 `
                 <tr>
@@ -84,6 +92,7 @@ function injectDataUsers(data) {
         .innerHTML = userRows
 }
 
+// function to fetch dates data from database
 async function fetchDateAsync() {
 
     let response = await fetch(`http://localhost:8080/date/get`)
@@ -92,6 +101,10 @@ async function fetchDateAsync() {
 
 }
 
+/**
+ * Function to dynamically render returned dates data to the front-end.
+ * If there is no fetched data, renders appropriate user message. 
+ *  */
 function injectDataDates(data) {
 
     let dateRows =
@@ -110,7 +123,6 @@ function injectDataDates(data) {
     `
 
     if (!Array.isArray(data.data) || !data.data.length) {
-
         dateRows = dateRows +
             `
         <td colspan = "9">
@@ -120,9 +132,7 @@ function injectDataDates(data) {
         </td>
         `
     } else {
-
         for (let i = 0; i <= data.data.length - 1; i++) {
-
             dateRows = dateRows +
                 `
                 <tr>
@@ -144,7 +154,9 @@ function injectDataDates(data) {
         .innerHTML = dateRows
 }
 
+// function to render user try again message in case of failed fetch request
 function showFetchError(tableName) {
+
     document.getElementById(tableName)
         .innerHTML =
         `
@@ -158,14 +170,17 @@ function showFetchError(tableName) {
 `
 }
 
+/**
+ * Function to dynamically render returned user data to the front-end.
+ * If there is no fetched data, renders appropirate user message. 
+ *  */
 function fetchData() {
 
     fetchUserAsync().then(data => {
-
         injectDataUsers(data)
 
     }).catch(err => {
-        console.log("Catch user")
+
         if (document.readyState === "complete") {
             showFetchError("loading-users")
         } else
@@ -175,10 +190,10 @@ function fetchData() {
     });
 
     fetchDateAsync().then(data => {
-
         injectDataDates(data)
 
     }).catch(err => {
+
         if (document.readyState === "complete") {
             showFetchError("loading-dates")
         } else
@@ -188,6 +203,10 @@ function fetchData() {
     });
 }
 
+/**
+ * Function to allow user to try to again fetch data
+ * if there was a previous unsuccessful api fetch call.
+ *  */
 function tryAgainFetch() {
 
     document.getElementById("loading-users")
@@ -199,7 +218,6 @@ function tryAgainFetch() {
               <p> Retrying... </p>
             </div>
         `
-
     document.getElementById("loading-dates")
         .innerHTML =
         `

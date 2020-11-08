@@ -1,3 +1,6 @@
+/**
+ * Node.js script to fetch data from an API (reqres.in).
+ */
 var express = require('express');
 var router = express.Router();
 const axios = require('axios');
@@ -7,12 +10,14 @@ let isFetched = 'false'
 let status = 'false'
 
 /**
- * Remap [{},{},{}...] to [[],[],[]...],
- * so it can be inserted at once to MySQL db
+ * Function to remap [{},{},{}...] to [[],[],[]...],
+ * so it can be inserted as multi INSERT
  *  */
 var remapToList = function(object) {
+
     list = []
     atr = []
+
     for (let key in object) {
         for (let key2 in object[key]) {
             atr.push(object[key][key2])
@@ -20,10 +25,13 @@ var remapToList = function(object) {
         list.push(atr)
         atr = []
     }
+
     return list
 }
 
-var saveUsers = function(user) {
+// function to insert all fetched reqres user data into database using multi INSERT sql query
+var saveUsersDb = function(user) {
+
     return new Promise(function(resolve, reject) {
         userList = remapToList(user)
         let query = `INSERT INTO user (fetched_id, email, name, surname, avatar) VALUES ?`;
@@ -32,12 +40,15 @@ var saveUsers = function(user) {
             if (err) {
                 reject(err);
             }
+
             resolve(1)
         });
     })
 }
 
+// function to build and execute axios fetch call on reqres api
 var fetchUsers = function(url, param) {
+
     return new Promise(function(resolve, reject) {
         axios.get(url + '?' + param + '=1').then(response => {
 
@@ -60,17 +71,17 @@ var fetchUsers = function(url, param) {
             } else
                 resolve({ 'state': 'success', 'data': users })
 
-        }).catch(err => {
+        }).catch(err => { // api error handler
             reject({ 'state': 'error', 'data': { 'code': err.code, 'url': err.config['url'] } })
         })
     })
 
 }
 
+// function to retreive all user data from database 
 var getUserDb = function() {
 
     return new Promise(function(resolve, reject) {
-
         let query = `SELECT * FROM user`;
         Mysqldb.query(query, (err, results, fields) => {
 
@@ -82,7 +93,10 @@ var getUserDb = function() {
     })
 }
 
-/* GET users listing. */
+/**
+ * Function to handle incoming request for fetching reqres user data,
+ * returns success or error object to user view (user.pug)
+ * */
 router.get('/', function(req, res, next) {
 
     isFetched = false
@@ -91,17 +105,20 @@ router.get('/', function(req, res, next) {
 
     fetchUsers('https://reqres.in/api/users', 'page').then((fetchedUsers, error) => {
         isFetched = true;
-        saveUsers(fetchedUsers.data).then((success, error) => {
+
+        saveUsersDb(fetchedUsers.data).then((success, error) => {
             isSaved = true
+
             res.render('user', {
                 isFetched: isFetched,
                 isSaved: isSaved,
                 status: status,
 
             })
-        }).catch(err => { //db error
+        }).catch(err => { //db error handler
             isSaved = false
             status = 'error'
+
             res.render('user', {
                 isFetched: isFetched,
                 isSaved: isSaved,
@@ -111,7 +128,7 @@ router.get('/', function(req, res, next) {
             })
         })
 
-    }).catch(err => { //api error
+    }).catch(err => { //api error handler
         res.render('user', {
             isFetched: isFetched,
             isSaved: isSaved,
@@ -122,15 +139,15 @@ router.get('/', function(req, res, next) {
     })
 });
 
+/** Function to handle incoming users get request,
+ *  returns user data or error to user view
+ *  */
 router.get('/get', function(req, res, next) {
 
     getUserDb().then((results, error) => {
-
         res.json({ 'status': 'success', 'data': results })
 
-    }).catch(err => {
-
-        console.log("Get DB error", err)
+    }).catch(err => { // db fetch error handler
         res.json({ 'status': 'error', 'data': { err } })
 
     })
