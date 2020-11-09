@@ -212,7 +212,7 @@ router.get('/', function(req, res, next) {
                     isSaved = false
                     status = 'error'
 
-                    res.render('date', {
+                    res.status(500).render('date', {
                         isFetched: isFetched,
                         isSaved: isSaved,
                         status: status,
@@ -222,7 +222,7 @@ router.get('/', function(req, res, next) {
                 })
 
             }).catch(err => { // api fetch error handler
-                res.render('date', {
+                res.status(500).render('date', {
                     isFetched: isFetched,
                     isSaved: isSaved,
                     status: err.state,
@@ -231,7 +231,7 @@ router.get('/', function(req, res, next) {
             })
 
         } catch (error) { // puppeteer error handler
-            res.render('date', {
+            res.status(500).render('date', {
                 puppetError: true,
                 status: error,
                 error: error
@@ -252,7 +252,7 @@ router.get('/get', function(req, res, next) {
         res.json({ 'status': 'success', 'data': results, 'rows': results.length })
 
     }).catch(err => { // fetch data error handler
-        res.json({ 'status': 'error', 'data': err })
+        res.status(500).json({ 'status': 'error', 'data': err })
 
     })
 })
