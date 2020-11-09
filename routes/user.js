@@ -109,7 +109,7 @@ router.get('/', function(req, res, next) {
         saveUsersDb(fetchedUsers.data).then((success, error) => {
             isSaved = true
 
-            res.render('user', {
+            res.status(201).render('user', {
                 isFetched: isFetched,
                 isSaved: isSaved,
                 status: status,

@@ -201,7 +201,7 @@ router.get('/', function(req, res, next) {
                         throw error
                     isSaved = true
 
-                    res.render('date', {
+                    res.status(201).render('date', {
                         isFetched: isFetched,
                         isSaved: isSaved,
                         status: status,
