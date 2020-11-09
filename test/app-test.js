@@ -5,14 +5,15 @@ process.env.NODE_ENV = 'test';
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
+let should = chai.should();
 
 /*
  * Test the 404 route
  */
 describe('/GET 404', () => {
     it('it should return 404 message', (done) => {
-        chai.request('http://localhost:8080/something')
-            .get('/get')
+        chai.request('http://localhost:8080')
+            .get('/something')
             .end((err, res) => {
                 res.should.have.status(404);
                 res.body.should.be.a('Object');
